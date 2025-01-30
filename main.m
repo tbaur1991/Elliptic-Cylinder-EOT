@@ -1,7 +1,7 @@
 % *************************************************************************
 %    I   SSSS   DDDD
 %    I   S      D   D 
-%    I   SSSS   D   D    Institut für Systemdynamik
+%    I   SSSS   D   D    Institut f�r Systemdynamik
 %    I      S   D   D
 %    I   SSSS   DDDD   
 % *************************************************************************
@@ -123,8 +123,8 @@ for j = 1:nMC
             P(:,:,k,j) = blkdiag(c, 2*eye(5));   
         else
             % prediction
-            X(:,k,j) = X(:,k-1);
-            P(:,:,k,j) = P(:,:,k-1) + Q;
+            X(:,k,j) = X(:,k-1,j);
+            P(:,:,k,j) = P(:,:,k-1,j) + Q;
         end
     
         % update elliptic cylinder UKF
