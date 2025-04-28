@@ -38,7 +38,7 @@ do_plot = true;
 artificial_noise = true;
 filter = 'ERHM';
 source = 'radial';
-n_upd = 50;
+n_upd = 20;
 
 % triangular distributions
 pd = makedist("Triangular","a",0,"b",1);
@@ -87,7 +87,7 @@ ax = gca;
 
 % start filtering
 for j = 1:nMC
-    j
+    display(['MC run: ',num2str(j)])
     % artificial measurement noise 
     meanInX = 0; meanInY = 0; varInX = 0; varInY = 0;
     tao = 200;

@@ -1,4 +1,4 @@
-function [X,P,meanInX,meanInY,varInX,varInY] = elliptic_cylinder_update(X,P,Y,sig_r,lambda,wm,wc,nxu,n_upd,meanInX,meanInY,varInX,varInY,tao,art_noise,filter,source)
+function [X,P,meanInX,meanInY,varInX,varInY] = elliptic_cylinder_update(X,P,Y,sig_r,lambda,wm,wc,nxu,n_upd,meanInX,meanInY,varInX,varInY,tao,artificial_noise,filter,source)
     % dimensions
     nx = length(X);
     nMeas = size(Y,2);
@@ -99,7 +99,7 @@ function [X,P,meanInX,meanInY,varInX,varInY] = elliptic_cylinder_update(X,P,Y,si
         z_pred = sum(wm.*z_predict,2);
     
         % calculate measurement noise covariance matrix
-        if art_noise
+        if artificial_noise
             % for asymmetric noise
             % first step measurements in local coordinates
             pos = X(1:3); or = X(4); 
@@ -111,12 +111,12 @@ function [X,P,meanInX,meanInY,varInX,varInY] = elliptic_cylinder_update(X,P,Y,si
             % indices of measurements inside
             idx = find(inside_outside < 0);  
             % update estimate of inside measurement mean
-            meanInX = 1/(1 + length(idx)/tao)*meanInX + 1/(tao + length(idx))*sum(abs(z_pred(2*idx-1)));
-            meanInY = 1/(1 + length(idx)/tao)*meanInY + 1/(tao + length(idx))*sum(abs(z_pred(2*idx)));
+            meanInX = 1/(1 + length(idx)/tao)*meanInX + 1/(tao + length(idx))*sum(abs(z_pred(3*idx-2)));
+            meanInY = 1/(1 + length(idx)/tao)*meanInY + 1/(tao + length(idx))*sum(abs(z_pred(3*idx-1)));
             z_pred(3*idx-2) = z_pred(3*idx-2) + meanInX; z_pred(3*idx-1) = z_pred(3*idx-1) + meanInY;
             % update estimate of inside measurement variance
-            varInX = 1/(1 + length(idx)/tao)*varInX + 1/(tao + length(idx))*sum((z_pred(2*idx-1) - meanInX).^2);
-            varInY = 1/(1 + length(idx)/tao)*varInY + 1/(tao + length(idx))*sum((z_pred(2*idx) - meanInY).^2);
+            varInX = 1/(1 + length(idx)/tao)*varInX + 1/(tao + length(idx))*sum((z_pred(3*idx-2) - meanInX).^2);
+            varInY = 1/(1 + length(idx)/tao)*varInY + 1/(tao + length(idx))*sum((z_pred(3*idx-1) - meanInY).^2);
             % build covariance matrix
             R = sig_r^2*ones(1,3*n_upd);
             R(3*idx-2) = varInX; R(3*idx-1) = varInY; R = diag(R);
